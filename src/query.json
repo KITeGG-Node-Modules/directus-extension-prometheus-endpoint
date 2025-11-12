@@ -1,0 +1,31 @@
+{
+  "queries": [
+    {
+      "expr": "DCGM_FI_DEV_POWER_USAGE{instance=~\"192\\\\.168\\\\.68\\\\.236:9400\", gpu=~\"(0|1|2|3|4|5|6|7)\"}",
+      "interval": "",
+      "legendFormat": "GPU {{gpu}}",
+      "refId": "A",
+      "datasource": {
+        "uid": "prometheus",
+        "type": "prometheus"
+      },
+      "queryType": "timeSeriesQuery",
+      "exemplar": false,
+      "requestId": "10A",
+      "utcOffsetSec": 7200,
+      "datasourceId": 1,
+      "intervalMs": 30000,
+      "maxDataPoints": 583
+    }
+  ],
+  "range": {
+    "from": "2023-07-14T08:28:33.917Z",
+    "to": "2023-07-14T08:43:33.917Z",
+    "raw": {
+      "from": "now-15m",
+      "to": "now"
+    }
+  },
+  "from": "1689323313917",
+  "to": "1689324213917"
+}

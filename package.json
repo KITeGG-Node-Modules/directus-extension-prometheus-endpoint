@@ -1,0 +1,24 @@
+{
+	"name": "kitegg-prometheus-endpoint",
+	"description": "Display cluster stats collected with Prometheus",
+	"icon": "extension",
+	"version": "1.0.0",
+	"keywords": [
+		"directus",
+		"directus-extension",
+		"directus-custom-endpoint"
+	],
+	"type": "module",
+	"directus:extension": {
+		"type": "endpoint",
+		"path": "src/index.js",
+		"source": "src/index.js",
+		"host": "^10.1.6"
+	},
+	"devDependencies": {
+		"@directus/extensions-sdk": "10.1.6"
+	},
+	"dependencies": {
+		"axios": "^1.4.0"
+	}
+}
