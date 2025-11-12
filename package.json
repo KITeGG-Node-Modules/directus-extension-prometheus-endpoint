@@ -1,5 +1,5 @@
 {
-	"name": "kitegg-prometheus-endpoint",
+	"name": "directus-prometheus-endpoint",
 	"description": "Display cluster stats collected with Prometheus",
 	"icon": "extension",
 	"version": "1.0.0",
