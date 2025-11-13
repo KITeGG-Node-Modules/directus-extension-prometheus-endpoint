@@ -19,6 +19,7 @@
 		"@directus/extensions-sdk": "10.1.6"
 	},
 	"dependencies": {
-		"axios": "^1.4.0"
+		"axios": "^1.4.0",
+		"kitegg-directus-extension-common": "github:KITeGG-Node-Modules/kitegg-directus-extension-common"
 	}
 }

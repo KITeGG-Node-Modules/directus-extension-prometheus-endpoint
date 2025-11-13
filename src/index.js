@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getKeycloakClient } from 'kitegg-directus-extension-common'
 
 export default {
 	id: 'prometheus',
@@ -51,6 +52,9 @@ export default {
 					const deploymentsService = new ItemsService('deployments', {
 						schema: req.schema
 					})
+					const usersService = new ItemsService('directus_users', {
+						schema: req.schema
+					})
 					for (const podName in metricsTree) {
 						if (podName.startsWith('sd-')) {
 							const deploymentId = podName.slice(3, 39)
@@ -79,9 +83,24 @@ export default {
 							}
 						}
 					}
+					const client = await getKeycloakClient()
 					const leaderboard = []
-					for (const user in users) {
-						leaderboard.push({ user, wH: users[user] })
+					for (const userId in users) {
+						let user
+						try {
+							if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(userId)) {
+								const {data: keycloakUsers} = await client.get(`/users?username=${userId}&exact=true`)
+								if (keycloakUsers.length) {
+									const users = await usersService.readByQuery({ filter: { external_identifier: { _eq: keycloakUsers[0].id } } })
+									user = users.shift() || {}
+								}
+							} else {
+								user = await usersService.readOne(userId)
+							}
+							leaderboard.push({ user: user.id, name: `${user.firstname} ${user.lastname}`, role: user.role?.name || user.role, wH: users[userId] })
+						} catch (error) {
+							console.error('Failed to get user:', error.message)
+						}
 					}
 					return res.send(leaderboard.sort((a, b) => {
 						if (a.wH < b.wH) return 1
