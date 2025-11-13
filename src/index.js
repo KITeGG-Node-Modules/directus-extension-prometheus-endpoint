@@ -55,6 +55,9 @@ export default {
 					const usersService = new ItemsService('directus_users', {
 						schema: req.schema
 					})
+					const rolesService = new ItemsService('directus_roles', {
+						schema: req.schema
+					})
 					for (const podName in metricsTree) {
 						if (podName.startsWith('sd-')) {
 							const deploymentId = podName.slice(3, 39)
@@ -97,7 +100,18 @@ export default {
 							} else {
 								user = await usersService.readOne(userId)
 							}
-							leaderboard.push({ user: user.id, name: `${user.firstname} ${user.lastname}`, role: user.role?.name || user.role, wH: users[userId] })
+							let roleName, institution
+							if (user.role) {
+								const role = await rolesService.readOne(user.role)
+								if (role) {
+									const parts = '/'
+									if (parts.length === 2) {
+										roleName = `${parts[0].trim()}`
+										institution = `${parts[1].trim()}`
+									}
+								}
+							}
+							leaderboard.push({ user: user.id, name: `${user.first_name} ${user.last_name}`, role: roleName, institution, wH: users[userId] })
 						} catch (error) {
 							console.error('Failed to get user:', error.message)
 						}
