@@ -104,7 +104,7 @@ export default {
 							if (user.role) {
 								const role = await rolesService.readOne(user.role)
 								if (role) {
-									const parts = '/'
+									const parts = (role.name || '').split('/')
 									if (parts.length === 2) {
 										roleName = `${parts[0].trim()}`
 										institution = `${parts[1].trim()}`
