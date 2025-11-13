@@ -106,12 +106,17 @@ export default {
 								if (role) {
 									const parts = (role.name || '').split('/')
 									if (parts.length === 2) {
-										roleName = `${parts[0].trim()}`
-										institution = `${parts[1].trim()}`
+										roleName = `${parts[1].trim()}`
+										institution = `${parts[2].trim()}`
 									}
 								}
 							}
-							leaderboard.push({ user: user.id, name: `${user.first_name} ${user.last_name}`, role: roleName, institution, wH: users[userId] })
+							const existing = leaderboard.find(entry => entry.user === user.id)
+							if (existing) {
+								existing.wH += users[userId]
+							} else {
+								leaderboard.push({ user: user.id, name: `${user.first_name} ${user.last_name}`, role: roleName, institution, wH: users[userId] })
+							}
 						} catch (error) {
 							console.error('Failed to get user:', error.message)
 						}
