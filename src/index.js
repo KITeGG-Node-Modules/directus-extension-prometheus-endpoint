@@ -92,30 +92,38 @@ export default {
 						let user
 						try {
 							if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(userId)) {
-								const {data: keycloakUsers} = await client.get(`/users?username=${userId}&exact=true`)
+								const { data: keycloakUsers } = await client.get(`/users?username=${userId}&exact=true`)
 								if (keycloakUsers.length) {
 									const users = await usersService.readByQuery({ filter: { external_identifier: { _eq: keycloakUsers[0].id } } })
-									user = users.shift() || {}
+									user = users.shift()
 								}
 							} else {
 								user = await usersService.readOne(userId)
 							}
-							let roleName, institution
-							if (user.role) {
-								const role = await rolesService.readOne(user.role)
-								if (role) {
-									const parts = (role.name || '').split('/')
-									if (parts.length === 2) {
-										roleName = `${parts[1].trim()}`
-										institution = `${parts[2].trim()}`
+							if (user) {
+								let roleName, institution
+								if (user.role) {
+									const role = await rolesService.readOne(user.role)
+									if (role) {
+										const parts = (role.name || '').split('/')
+										if (parts.length === 2) {
+											roleName = `${parts[1]}`.trim()
+											institution = `${parts[2]}`.trim()
+										}
 									}
 								}
-							}
-							const existing = leaderboard.find(entry => entry.user === user.id)
-							if (existing) {
-								existing.wH += users[userId]
-							} else {
-								leaderboard.push({ user: user.id, name: `${user.first_name} ${user.last_name}`, role: roleName, institution, wH: users[userId] })
+								const existing = leaderboard.find(entry => entry.user === user.id)
+								if (existing) {
+									existing.wH += users[userId]
+								} else {
+									leaderboard.push({
+										user: user.id,
+										name: `${user.first_name} ${user.last_name}`,
+										role: roleName,
+										institution,
+										wH: users[userId]
+									})
+								}
 							}
 						} catch (error) {
 							console.error('Failed to get user:', error.message)
