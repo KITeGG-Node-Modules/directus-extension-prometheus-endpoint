@@ -108,7 +108,7 @@ export default {
 										const parts = (role.name || '').split('/')
 										if (parts.length === 2) {
 											roleName = `${parts[1]}`.trim()
-											institution = `${parts[2]}`.trim()
+											institution = `${parts[0]}`.trim()
 										}
 									}
 								}
